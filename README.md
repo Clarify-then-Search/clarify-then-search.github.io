@@ -1,16 +1,18 @@
 # Clarify-then-Search
 
-Resources for the *Clarify-then-Search* paper (KDD 2026).
+Project page for **Clarify-then-Search** (Chinese Deep Search).
 
-## Hard518 dataset & eval package
+## Hard518 release (v1)
 
-Download the release: **Hard518 dataset & eval package** (tag: `hard518-v1`) from the GitHub Releases page.
+Download the release package (dataset + golden nuggets + baseline candidates + eval scripts):
 
-Contents include:
-- Hard518 queries (`hard_518_queries.csv`)
-- Golden nuggets (`gold_public_hard518.jsonl`)
-- Baseline candidate answers
-- Clarification-only intermediate outputs
-- Evaluation scripts
+- **hard518-v1**: https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/download/hard518-v1/clarify-then-search-518-release.zip
 
-See the release README for usage and evaluation instructions.
+After downloading, unzip and follow `release/README.md` to run evaluation.
+
+## Contents inside the zip
+
+- `release/data/hard_518_queries.csv`
+- `release/data/gold_public_hard518.jsonl`
+- `release/results/candidates/*.jsonl`
+- `release/code/eval_gold.py` (LLM-judge evaluation)
