@@ -2,47 +2,302 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Clarify-Then-Search</title>
+  <meta name="description" content="Clarify-Then-Search: Hard518 release (dataset + golden nuggets + baselines + eval scripts)." />
   <style>
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Noto Sans";max-width:900px;margin:48px auto;padding:0 18px;line-height:1.6}
-    .card{border:1px solid #e5e7eb;border-radius:14px;padding:18px 18px 10px;background:#fff}
-    .btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid #111827;text-decoration:none;color:#111827}
-    .btn:hover{background:#111827;color:#fff}
-    code{background:#f3f4f6;padding:2px 6px;border-radius:6px}
-    .muted{color:#6b7280}
-    ul{margin-top:8px}
+    :root{
+      --bg0:#050816;
+      --bg1:#08122e;
+      --card:rgba(255,255,255,.06);
+      --card2:rgba(255,255,255,.10);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.68);
+      --stroke:rgba(255,255,255,.12);
+      --shadow: 0 18px 55px rgba(0,0,0,.45);
+      --shadow2: 0 8px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 800px at 15% 18%, rgba(0,180,255,.35), transparent 55%),
+        radial-gradient(900px 700px at 78% 30%, rgba(110,90,255,.34), transparent 52%),
+        radial-gradient(700px 600px at 65% 86%, rgba(0,255,190,.18), transparent 55%),
+        linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 100%);
+      overflow-x:hidden;
+    }
+
+    /* floating blobs */
+    .blob{
+      position:absolute; inset:auto;
+      filter: blur(38px);
+      opacity:.55;
+      transform: translateZ(0);
+      pointer-events:none;
+      animation: float 9s ease-in-out infinite;
+    }
+    .b1{width:340px;height:340px;left:-80px;top:-70px;background:radial-gradient(circle at 30% 30%, rgba(56,189,248,.95), rgba(99,102,241,.2) 60%, transparent 72%);}
+    .b2{width:420px;height:420px;right:-130px;top:140px;background:radial-gradient(circle at 35% 35%, rgba(99,102,241,.88), rgba(34,211,238,.2) 62%, transparent 75%);animation-delay: -2.3s;}
+    .b3{width:360px;height:360px;left:35%;bottom:-160px;background:radial-gradient(circle at 40% 40%, rgba(16,185,129,.55), rgba(34,211,238,.18) 55%, transparent 78%);animation-delay:-4.2s;}
+    @keyframes float{
+      0%,100%{transform:translateY(0) translateX(0) scale(1)}
+      50%{transform:translateY(-18px) translateX(10px) scale(1.02)}
+    }
+
+    .wrap{max-width:1020px;margin:0 auto;padding:56px 18px 70px;position:relative}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+      padding:10px 12px;border:1px solid var(--stroke);border-radius:999px;
+      background: rgba(0,0,0,.18);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px
+    }
+    .mark{
+      width:34px;height:34px;border-radius:11px;
+      background: linear-gradient(135deg, rgba(34,211,238,.95), rgba(99,102,241,.95));
+      box-shadow: 0 10px 26px rgba(56,189,248,.22);
+      position:relative;
+    }
+    .mark:after{
+      content:"";
+      position:absolute; inset:9px;
+      border-radius:9px;
+      background: rgba(0,0,0,.22);
+      border:1px solid rgba(255,255,255,.14);
+    }
+    .links{display:flex;gap:10px;flex-wrap:wrap}
+    .link{
+      color:var(--muted);text-decoration:none;font-size:13px;
+      padding:8px 10px;border-radius:999px;border:1px solid transparent;
+    }
+    .link:hover{color:var(--text);border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
+    .hero{padding:44px 0 18px}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      backdrop-filter: blur(10px);
+      font-size:13px;color:var(--muted);
+    }
+    .dot{
+      width:9px;height:9px;border-radius:99px;
+      background: rgba(34,211,238,.95);
+      box-shadow: 0 0 0 5px rgba(34,211,238,.12);
+    }
+    h1{
+      margin:14px 0 10px;
+      font-size:46px;line-height:1.05;
+      letter-spacing:-.8px;
+    }
+    .grad{
+      background: linear-gradient(90deg, rgba(56,189,248,1), rgba(99,102,241,1), rgba(34,211,238,1));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+      filter: drop-shadow(0 10px 24px rgba(56,189,248,.10));
+    }
+    .sub{
+      margin:0;
+      max-width:720px;
+      color:var(--muted);
+      font-size:16px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+      margin-top:26px;
+    }
+    @media (max-width: 860px){ .grid{grid-template-columns:1fr} h1{font-size:38px} }
+
+    .card{
+      border-radius:var(--radius);
+      border:1px solid var(--stroke);
+      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-1px;
+      background: radial-gradient(800px 260px at 30% 0%, rgba(56,189,248,.20), transparent 60%),
+                  radial-gradient(700px 260px at 80% 30%, rgba(99,102,241,.18), transparent 60%);
+      pointer-events:none;
+    }
+    .card > *{position:relative}
+    .card-hd{padding:18px 18px 0}
+    .card-bd{padding:14px 18px 18px}
+    .h2{
+      margin:0 0 6px;font-size:18px;letter-spacing:-.2px
+    }
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;
+      font-size:12px;color:rgba(255,255,255,.75);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.16);
+    }
+    ul{margin:12px 0 0;padding-left:18px;color:rgba(255,255,255,.78)}
+    li{margin:8px 0}
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      padding:2px 7px;border-radius:9px;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.10);
+      color: rgba(255,255,255,.88);
+      white-space:nowrap;
+    }
+
+    .ctaRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;
+      padding:11px 14px;border-radius:14px;
+      text-decoration:none;font-weight:650;font-size:14px;
+      border:1px solid rgba(255,255,255,.14);
+      color: rgba(255,255,255,.92);
+      background: rgba(255,255,255,.06);
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+      backdrop-filter: blur(10px);
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+    .btn:hover{transform: translateY(-1px);background: rgba(255,255,255,.09);border-color: rgba(255,255,255,.20)}
+    .btnPrimary{
+      border-color: rgba(56,189,248,.35);
+      background: linear-gradient(135deg, rgba(56,189,248,.95), rgba(99,102,241,.92));
+      box-shadow: 0 18px 40px rgba(56,189,248,.18);
+    }
+    .btnPrimary:hover{filter:saturate(1.08);transform: translateY(-2px)}
+    .arrow{
+      width:14px;height:14px;display:inline-block;
+      border-right:2px solid currentColor;border-bottom:2px solid currentColor;
+      transform: rotate(-45deg);opacity:.9
+    }
+
+    .side{
+      padding:18px;
+      display:flex;flex-direction:column;gap:12px
+    }
+    .kv{
+      display:grid;grid-template-columns:1fr 1fr;gap:10px
+    }
+    .tile{
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      padding:12px;
+    }
+    .k{font-size:12px;color:rgba(255,255,255,.65)}
+    .v{font-size:16px;font-weight:700;margin-top:2px}
+    .foot{
+      margin-top:22px;
+      color: rgba(255,255,255,.55);
+      font-size:13px;
+    }
+    .foot a{color:rgba(255,255,255,.72);text-decoration:none}
+    .foot a:hover{text-decoration:underline}
   </style>
 </head>
+
 <body>
-  <h1>Clarify-Then-Search</h1>
-  <p class="muted">Project page for our KDD 2026 benchmark (Chinese deep search).</p>
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
 
-  <div class="card">
-    <h2>Hard518 Release</h2>
-    <p>
-      This release contains:
-      <ul>
-        <li><b>Hard518 dataset</b> (<code>hard_518_queries.csv</code>)</li>
-        <li><b>Golden nuggets</b> for evaluation (<code>gold_public_hard518.jsonl</code>)</li>
-        <li><b>Baseline candidates</b> and evaluation scripts</li>
-      </ul>
-    </p>
+  <main class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark"></div>
+        <div>Clarify-Then-Search</div>
+      </div>
+      <nav class="links">
+        <a class="link" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io">GitHub</a>
+        <a class="link" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/tag/hard518-v1">Release</a>
+      </nav>
+    </header>
 
-    <p>
-      <a class="btn" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/download/hard518-v1/clarify-then-search-518-release.zip">
-        Download hard518-v1 (zip)
-      </a>
-    </p>
+    <section class="hero">
+      <div class="badge"><span class="dot"></span> KDD 2026 Benchmark · Chinese Deep Search</div>
+      <h1><span class="grad">Clarify-Then-Search</span> Hard518</h1>
+      <p class="sub">
+        A hard subset (518 items) with <b>golden nuggets</b> for LLM-judge evaluation and baseline candidate outputs.
+        Download the package below to reproduce nugget-coverage scores locally.
+      </p>
 
-    <p class="muted">
-      Release tag: <code>hard518-v1</code>
-      · GitHub Releases page: <a href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/tag/hard518-v1">hard518-v1</a>
-    </p>
-  </div>
+      <div class="grid">
+        <section class="card">
+          <div class="card-hd">
+            <div class="pill">Hard518 Release · <code>hard518-v1</code></div>
+          </div>
+          <div class="card-bd">
+            <div class="h2">What’s inside</div>
+            <ul>
+              <li><code>data/hard_518_queries.csv</code> (fused_query, blurred_query)</li>
+              <li><code>data/gold_public_hard518.jsonl</code> (golden nuggets)</li>
+              <li><code>results/candidates/*.jsonl</code> (baseline candidates)</li>
+              <li><code>code/eval_gold.py</code> (LLM-judge evaluation script)</li>
+            </ul>
 
-  <p class="muted" style="margin-top:18px;">
-    Repository: <a href="https://github.com/Clarify-then-Search/clarify-then-search.github.io">Clarify-then-Search/clarify-then-search.github.io</a>
-  </p>
+            <div class="ctaRow">
+              <a class="btn btnPrimary" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/download/hard518-v1/clarify-then-search-518-release.zip">
+                Download ZIP <span class="arrow"></span>
+              </a>
+              <a class="btn" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/tag/hard518-v1">
+                View Release
+              </a>
+            </div>
+
+            <div class="foot" style="margin-top:14px;">
+              Tip: after unzipping, follow <code>release/README.md</code> for evaluation commands.
+            </div>
+          </div>
+        </section>
+
+        <aside class="card">
+          <div class="side">
+            <div class="h2">Quick stats</div>
+            <div class="kv">
+              <div class="tile">
+                <div class="k">Split</div>
+                <div class="v">Hard518</div>
+              </div>
+              <div class="tile">
+                <div class="k">Items</div>
+                <div class="v">518</div>
+              </div>
+              <div class="tile">
+                <div class="k">Eval</div>
+                <div class="v">Nugget coverage</div>
+              </div>
+              <div class="tile">
+                <div class="k">Tag</div>
+                <div class="v">hard518-v1</div>
+              </div>
+            </div>
+
+            <div class="tile">
+              <div class="k">Baseline executor</div>
+              <div class="v" style="font-size:14px;font-weight:650;color:rgba(255,255,255,.84);margin-top:6px">
+                WebDancer (retrieval & browsing)
+              </div>
+            </div>
+
+            <div class="foot">
+              Repo: <a href="https://github.com/Clarify-then-Search/clarify-then-search.github.io">Clarify-then-Search/clarify-then-search.github.io</a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
