@@ -2,302 +2,437 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Clarify-Then-Search</title>
-  <meta name="description" content="Clarify-Then-Search: Hard518 release (dataset + golden nuggets + baselines + eval scripts)." />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Clarify-then-Search</title>
   <style>
     :root{
-      --bg0:#050816;
-      --bg1:#08122e;
-      --card:rgba(255,255,255,.06);
-      --card2:rgba(255,255,255,.10);
-      --text:rgba(255,255,255,.92);
-      --muted:rgba(255,255,255,.68);
-      --stroke:rgba(255,255,255,.12);
-      --shadow: 0 18px 55px rgba(0,0,0,.45);
-      --shadow2: 0 8px 30px rgba(0,0,0,.35);
-      --radius: 18px;
+      --bg:#0b1020;
+      --panel:rgba(255,255,255,.06);
+      --panel2:rgba(255,255,255,.10);
+      --text:#e8ecff;
+      --muted:rgba(232,236,255,.72);
+      --border:rgba(255,255,255,.14);
+      --shadow:0 24px 80px rgba(0,0,0,.45);
+      --accent:#4da3ff;
+      --accent2:#7c5cff;
+      --good:#5eead4;
+      --warn:#fbbf24;
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
     body{
       margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans";
       color:var(--text);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
       background:
-        radial-gradient(1200px 800px at 15% 18%, rgba(0,180,255,.35), transparent 55%),
-        radial-gradient(900px 700px at 78% 30%, rgba(110,90,255,.34), transparent 52%),
-        radial-gradient(700px 600px at 65% 86%, rgba(0,255,190,.18), transparent 55%),
-        linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 100%);
-      overflow-x:hidden;
+        radial-gradient(900px 500px at 20% 10%, rgba(77,163,255,.28), transparent 60%),
+        radial-gradient(700px 450px at 90% 20%, rgba(124,92,255,.22), transparent 55%),
+        radial-gradient(900px 600px at 40% 90%, rgba(94,234,212,.14), transparent 65%),
+        var(--bg);
+      line-height:1.6;
     }
-
-    /* floating blobs */
-    .blob{
-      position:absolute; inset:auto;
-      filter: blur(38px);
-      opacity:.55;
-      transform: translateZ(0);
-      pointer-events:none;
-      animation: float 9s ease-in-out infinite;
-    }
-    .b1{width:340px;height:340px;left:-80px;top:-70px;background:radial-gradient(circle at 30% 30%, rgba(56,189,248,.95), rgba(99,102,241,.2) 60%, transparent 72%);}
-    .b2{width:420px;height:420px;right:-130px;top:140px;background:radial-gradient(circle at 35% 35%, rgba(99,102,241,.88), rgba(34,211,238,.2) 62%, transparent 75%);animation-delay: -2.3s;}
-    .b3{width:360px;height:360px;left:35%;bottom:-160px;background:radial-gradient(circle at 40% 40%, rgba(16,185,129,.55), rgba(34,211,238,.18) 55%, transparent 78%);animation-delay:-4.2s;}
-    @keyframes float{
-      0%,100%{transform:translateY(0) translateX(0) scale(1)}
-      50%{transform:translateY(-18px) translateX(10px) scale(1.02)}
-    }
-
-    .wrap{max-width:1020px;margin:0 auto;padding:56px 18px 70px;position:relative}
+    a{color:inherit}
+    .wrap{max-width:1100px;margin:0 auto;padding:36px 18px 64px}
     .topbar{
-      display:flex;align-items:center;justify-content:space-between;gap:14px;
-      padding:10px 12px;border:1px solid var(--stroke);border-radius:999px;
-      background: rgba(0,0,0,.18);
+      display:flex;justify-content:space-between;align-items:center;gap:14px;
+      padding:10px 12px;border:1px solid var(--border);border-radius:16px;
+      background:rgba(255,255,255,.04);
       backdrop-filter: blur(10px);
-      box-shadow: var(--shadow2);
     }
-    .brand{
-      display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px
-    }
-    .mark{
-      width:34px;height:34px;border-radius:11px;
-      background: linear-gradient(135deg, rgba(34,211,238,.95), rgba(99,102,241,.95));
-      box-shadow: 0 10px 26px rgba(56,189,248,.22);
-      position:relative;
-    }
-    .mark:after{
-      content:"";
-      position:absolute; inset:9px;
-      border-radius:9px;
-      background: rgba(0,0,0,.22);
-      border:1px solid rgba(255,255,255,.14);
-    }
-    .links{display:flex;gap:10px;flex-wrap:wrap}
-    .link{
-      color:var(--muted);text-decoration:none;font-size:13px;
-      padding:8px 10px;border-radius:999px;border:1px solid transparent;
-    }
-    .link:hover{color:var(--text);border-color:rgba(255,255,255,.12);background:rgba(255,255,255,.04)}
-    .hero{padding:44px 0 18px}
-    .badge{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 12px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background: rgba(255,255,255,.06);
-      backdrop-filter: blur(10px);
-      font-size:13px;color:var(--muted);
-    }
+    .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px}
     .dot{
-      width:9px;height:9px;border-radius:99px;
-      background: rgba(34,211,238,.95);
-      box-shadow: 0 0 0 5px rgba(34,211,238,.12);
+      width:12px;height:12px;border-radius:50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 0 4px rgba(77,163,255,.15);
     }
-    h1{
-      margin:14px 0 10px;
-      font-size:46px;line-height:1.05;
-      letter-spacing:-.8px;
+    .nav{display:flex;flex-wrap:wrap;gap:8px}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 10px;border-radius:999px;border:1px solid var(--border);
+      background:rgba(255,255,255,.04); text-decoration:none;
+      font-size:13px;color:var(--muted)
     }
-    .grad{
-      background: linear-gradient(90deg, rgba(56,189,248,1), rgba(99,102,241,1), rgba(34,211,238,1));
-      -webkit-background-clip:text;background-clip:text;color:transparent;
-      filter: drop-shadow(0 10px 24px rgba(56,189,248,.10));
-    }
-    .sub{
-      margin:0;
-      max-width:720px;
-      color:var(--muted);
-      font-size:16px;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:16px;
-      margin-top:26px;
-    }
-    @media (max-width: 860px){ .grid{grid-template-columns:1fr} h1{font-size:38px} }
-
-    .card{
-      border-radius:var(--radius);
-      border:1px solid var(--stroke);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+    .pill:hover{background:rgba(255,255,255,.07);color:var(--text)}
+    .hero{
+      margin-top:22px;
+      padding:28px 22px;
+      border:1px solid var(--border);
+      border-radius:22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
       box-shadow: var(--shadow);
       overflow:hidden;
       position:relative;
     }
-    .card::before{
+    .hero:before{
       content:"";
-      position:absolute; inset:-1px;
-      background: radial-gradient(800px 260px at 30% 0%, rgba(56,189,248,.20), transparent 60%),
-                  radial-gradient(700px 260px at 80% 30%, rgba(99,102,241,.18), transparent 60%);
+      position:absolute; inset:-2px;
+      background: radial-gradient(600px 220px at 20% 0%, rgba(77,163,255,.22), transparent 60%),
+                  radial-gradient(550px 200px at 85% 10%, rgba(124,92,255,.20), transparent 55%);
       pointer-events:none;
+      filter:saturate(120%);
     }
-    .card > *{position:relative}
-    .card-hd{padding:18px 18px 0}
-    .card-bd{padding:14px 18px 18px}
-    .h2{
-      margin:0 0 6px;font-size:18px;letter-spacing:-.2px
+    .hero > *{position:relative}
+    h1{margin:0 0 8px;font-size:36px;line-height:1.15}
+    .subtitle{margin:0;color:var(--muted);max-width:900px}
+    .ctaRow{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+    .btn{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:11px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.18);
+      background: linear-gradient(135deg, rgba(77,163,255,.95), rgba(124,92,255,.95));
+      color:#081028; font-weight:800; text-decoration:none;
+      box-shadow: 0 14px 36px rgba(77,163,255,.22);
     }
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:6px 10px;border-radius:999px;
-      font-size:12px;color:rgba(255,255,255,.75);
+    .btn:hover{filter:brightness(1.03)}
+    .btn.secondary{
+      background: rgba(255,255,255,.05);
+      color:var(--text);
+      font-weight:700;
+      box-shadow:none;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:16px;
+      margin-top:16px;
+    }
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+      h1{font-size:30px}
+    }
+    .card{
+      border:1px solid var(--border);
+      border-radius:18px;
+      background: rgba(255,255,255,.045);
+      padding:16px 16px;
+      backdrop-filter: blur(8px);
+    }
+    .card h2{margin:0 0 8px;font-size:18px}
+    .card p{margin:0;color:var(--muted)}
+    .kvs{display:grid;grid-template-columns: 1fr 1fr; gap:10px; margin-top:12px}
+    @media (max-width: 520px){ .kvs{grid-template-columns:1fr} }
+    .kv{
       border:1px solid rgba(255,255,255,.12);
+      border-radius:14px;
+      padding:12px;
+      background: rgba(0,0,0,.10);
+    }
+    .kv .k{font-size:12px;color:var(--muted);margin-bottom:4px}
+    .kv .v{font-weight:800}
+    .section{margin-top:22px}
+    .sectionTitle{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      margin:0 0 10px;
+    }
+    .sectionTitle h2{margin:0;font-size:20px}
+    .badge{
+      font-size:12px;color:var(--muted);
+      border:1px solid rgba(255,255,255,.14);
+      padding:6px 10px;border-radius:999px;
+      background: rgba(255,255,255,.04);
+    }
+    .code{
+      margin-top:10px;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:14px;
+      background: rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+    pre{margin:0;padding:12px 12px;overflow:auto;color:rgba(232,236,255,.92)}
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New"; font-size:13px}
+    .actions{
+      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+      padding:10px 12px;border-top:1px solid rgba(255,255,255,.10);
+      color:var(--muted);font-size:12px
+    }
+    .miniBtn{
+      border:1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.05);
+      color:var(--text);
+      padding:8px 10px;border-radius:12px;
+      cursor:pointer;
+      font-weight:700;
+    }
+    .miniBtn:hover{background: rgba(255,255,255,.08)}
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:16px;
       background: rgba(0,0,0,.16);
     }
-    ul{margin:12px 0 0;padding-left:18px;color:rgba(255,255,255,.78)}
-    li{margin:8px 0}
-    code{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size:12px;
-      padding:2px 7px;border-radius:9px;
-      background: rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.10);
-      color: rgba(255,255,255,.88);
-      white-space:nowrap;
-    }
-
-    .ctaRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:10px;
-      padding:11px 14px;border-radius:14px;
-      text-decoration:none;font-weight:650;font-size:14px;
-      border:1px solid rgba(255,255,255,.14);
-      color: rgba(255,255,255,.92);
-      background: rgba(255,255,255,.06);
-      box-shadow: 0 10px 30px rgba(0,0,0,.25);
-      backdrop-filter: blur(10px);
-      transition: transform .15s ease, background .15s ease, border-color .15s ease;
-    }
-    .btn:hover{transform: translateY(-1px);background: rgba(255,255,255,.09);border-color: rgba(255,255,255,.20)}
-    .btnPrimary{
-      border-color: rgba(56,189,248,.35);
-      background: linear-gradient(135deg, rgba(56,189,248,.95), rgba(99,102,241,.92));
-      box-shadow: 0 18px 40px rgba(56,189,248,.18);
-    }
-    .btnPrimary:hover{filter:saturate(1.08);transform: translateY(-2px)}
-    .arrow{
-      width:14px;height:14px;display:inline-block;
-      border-right:2px solid currentColor;border-bottom:2px solid currentColor;
-      transform: rotate(-45deg);opacity:.9
-    }
-
-    .side{
-      padding:18px;
-      display:flex;flex-direction:column;gap:12px
-    }
-    .kv{
-      display:grid;grid-template-columns:1fr 1fr;gap:10px
-    }
-    .tile{
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      padding:12px;
-    }
-    .k{font-size:12px;color:rgba(255,255,255,.65)}
-    .v{font-size:16px;font-weight:700;margin-top:2px}
-    .foot{
-      margin-top:22px;
-      color: rgba(255,255,255,.55);
+    th, td{
+      padding:10px 10px;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      color:var(--muted);
       font-size:13px;
+      text-align:left;
     }
-    .foot a{color:rgba(255,255,255,.72);text-decoration:none}
-    .foot a:hover{text-decoration:underline}
+    th{color:rgba(232,236,255,.92);font-weight:800;background: rgba(255,255,255,.04)}
+    tr:last-child td{border-bottom:none}
+    .hi{color:var(--text);font-weight:800}
+    .tag{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.04);
+      font-size:12px;color:var(--muted);
+      margin-right:8px;margin-top:8px
+    }
+    .foot{
+      margin-top:26px;
+      color:var(--muted);
+      font-size:12px;
+      display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+      opacity:.95
+    }
+    .muted{color:var(--muted)}
+    .ok{color:var(--good);font-weight:800}
+    .warn{color:var(--warn);font-weight:800}
+    .small{font-size:12px;color:var(--muted)}
   </style>
 </head>
 
 <body>
-  <div class="blob b1"></div>
-  <div class="blob b2"></div>
-  <div class="blob b3"></div>
-
-  <main class="wrap">
-    <header class="topbar">
-      <div class="brand">
-        <div class="mark"></div>
-        <div>Clarify-Then-Search</div>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand"><span class="dot"></span> Clarify-then-Search</div>
+      <div class="nav">
+        <a class="pill" href="#download">Download</a>
+        <a class="pill" href="#quickstart">Quickstart</a>
+        <a class="pill" href="#dataset">Dataset</a>
+        <a class="pill" href="#results">Results</a>
+        <a class="pill" href="#evaluation">Evaluation</a>
+        <a class="pill" href="#license">License</a>
       </div>
-      <nav class="links">
-        <a class="link" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io">GitHub</a>
-        <a class="link" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/tag/hard518-v1">Release</a>
-      </nav>
-    </header>
+    </div>
 
-    <section class="hero">
-      <div class="badge"><span class="dot"></span> KDD 2026 Benchmark · Chinese Deep Search</div>
-      <h1><span class="grad">Clarify-Then-Search</span> Hard518</h1>
-      <p class="sub">
-        A hard subset (518 items) with <b>golden nuggets</b> for LLM-judge evaluation and baseline candidate outputs.
-        Download the package below to reproduce nugget-coverage scores locally.
+    <div class="hero" id="download">
+      <h1>Clarify-then-Search for Chinese Deep Search</h1>
+      <p class="subtitle">
+        A benchmark for underspecified information-seeking queries where clarification must provide end-to-end utility.
+        This page hosts the <b>Hard518</b> public release and evaluation scripts.
       </p>
 
-      <div class="grid">
-        <section class="card">
-          <div class="card-hd">
-            <div class="pill">Hard518 Release · <code>hard518-v1</code></div>
-          </div>
-          <div class="card-bd">
-            <div class="h2">What’s inside</div>
-            <ul>
-              <li><code>data/hard_518_queries.csv</code> (fused_query, blurred_query)</li>
-              <li><code>data/gold_public_hard518.jsonl</code> (golden nuggets)</li>
-              <li><code>results/candidates/*.jsonl</code> (baseline candidates)</li>
-              <li><code>code/eval_gold.py</code> (LLM-judge evaluation script)</li>
-            </ul>
-
-            <div class="ctaRow">
-              <a class="btn btnPrimary" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/download/hard518-v1/clarify-then-search-518-release.zip">
-                Download ZIP <span class="arrow"></span>
-              </a>
-              <a class="btn" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/tag/hard518-v1">
-                View Release
-              </a>
-            </div>
-
-            <div class="foot" style="margin-top:14px;">
-              Tip: after unzipping, follow <code>release/README.md</code> for evaluation commands.
-            </div>
-          </div>
-        </section>
-
-        <aside class="card">
-          <div class="side">
-            <div class="h2">Quick stats</div>
-            <div class="kv">
-              <div class="tile">
-                <div class="k">Split</div>
-                <div class="v">Hard518</div>
-              </div>
-              <div class="tile">
-                <div class="k">Items</div>
-                <div class="v">518</div>
-              </div>
-              <div class="tile">
-                <div class="k">Eval</div>
-                <div class="v">Nugget coverage</div>
-              </div>
-              <div class="tile">
-                <div class="k">Tag</div>
-                <div class="v">hard518-v1</div>
-              </div>
-            </div>
-
-            <div class="tile">
-              <div class="k">Baseline executor</div>
-              <div class="v" style="font-size:14px;font-weight:650;color:rgba(255,255,255,.84);margin-top:6px">
-                WebDancer (retrieval & browsing)
-              </div>
-            </div>
-
-            <div class="foot">
-              Repo: <a href="https://github.com/Clarify-then-Search/clarify-then-search.github.io">Clarify-then-Search/clarify-then-search.github.io</a>
-            </div>
-          </div>
-        </aside>
+      <div class="ctaRow">
+        <a class="btn" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/download/hard518-v1/clarify-then-search-518-release.zip">
+          ⬇ Download Hard518 (zip)
+        </a>
+        <a class="btn secondary" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/tag/hard518-v1">
+          View GitHub Release
+        </a>
       </div>
-    </section>
-  </main>
+
+      <div class="kvs">
+        <div class="kv">
+          <div class="k">Dataset size</div>
+          <div class="v">518 queries</div>
+        </div>
+        <div class="kv">
+          <div class="k">Core metric</div>
+          <div class="v">restore_score_100</div>
+        </div>
+        <div class="kv">
+          <div class="k">Gold format</div>
+          <div class="v">weighted nuggets (JSONL)</div>
+        </div>
+        <div class="kv">
+          <div class="k">Licenses</div>
+          <div class="v">Code: MIT · Data: CC BY 4.0</div>
+        </div>
+      </div>
+
+      <div class="small" style="margin-top:12px;">
+        Tip: GitHub Pages may take a few minutes to reflect commits due to build & CDN cache.
+      </div>
+    </div>
+
+    <div class="grid" id="quickstart">
+      <div class="card">
+        <h2>Quickstart</h2>
+        <p>
+          Unzip, set your judge endpoint (Qianfan OpenAI-compatible), and run evaluation.
+          The judge computes nugget coverage (full/partial/none) and outputs per-item and summary stats.
+        </p>
+
+        <div class="code">
+          <pre><code># 1) unzip
+unzip clarify-then-search-518-release.zip
+cd release
+
+# 2) env (Qianfan OpenAI-compatible)
+export QIANFAN_API_KEY="YOUR_KEY"
+# optional:
+export QIANFAN_BASE_URL="https://qianfan.baidubce.com/v2"
+export EVAL_MODEL_NAME="ernie-4.5-turbo-128k"
+
+# 3) run one candidate
+python ./code/eval_gold.py \
+  --gold_a data/gold_public_hard518.jsonl \
+  --gold_b results/candidates/ebk1__cand_hard518.jsonl \
+  --out_dir outputs/ebk1</code></pre>
+          <div class="actions">
+            <button class="miniBtn" onclick="copyBlock(this)">Copy commands</button>
+            <span>Outputs: <span class="hi">outputs/*/per_item.jsonl</span> and <span class="hi">outputs/*/summary.json</span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>What’s inside the release</h2>
+        <p class="muted">Core artifacts needed to evaluate any model against the static golden nuggets.</p>
+        <div style="margin-top:10px;">
+          <div class="tag">data/hard_518_queries.csv</div>
+          <div class="tag">data/gold_public_hard518.jsonl</div>
+          <div class="tag">results/candidates/*.jsonl</div>
+          <div class="tag">results/clarify_only/*.csv</div>
+          <div class="tag">code/eval_gold.py</div>
+        </div>
+
+        <div class="code" style="margin-top:12px;">
+          <pre><code>release/
+  data/
+    hard_518_queries.csv
+    gold_public_hard518.jsonl
+  results/
+    candidates/
+    clarify_only/
+  code/
+    eval_gold.py
+    make_candidate.py
+    prepare_public_eval.py</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="dataset">
+      <div class="sectionTitle">
+        <h2>Dataset</h2>
+        <span class="badge">Hard518 subset</span>
+      </div>
+      <div class="card">
+        <p>
+          The benchmark contains 518 information-seeking queries selected to be underspecified, where clarification is expected to provide high utility.
+          Each instance has an intent query <code>fused_query</code> and an underspecified query <code>blurred_query</code>.
+        </p>
+        <p style="margin-top:10px;">
+          Under a closed-book protocol, a system observes only <code>blurred_query</code>, asks <code>k</code> clarification questions, receives constrained answers,
+          rewrites to <code>q̂</code>, and is evaluated by running a fixed deep-search backend on <code>q̂</code> and scoring nugget restoration against a static gold built from <code>fused_query</code>.
+        </p>
+
+        <div class="kvs">
+          <div class="kv">
+            <div class="k">Released fields</div>
+            <div class="v">fused_query, blurred_query</div>
+          </div>
+          <div class="kv">
+            <div class="k">No “gold clarifications”</div>
+            <div class="v">clarification is a system output</div>
+          </div>
+        </div>
+
+        <p class="small" style="margin-top:10px;">
+          Why no supervised “gold” clarification labels?
+          We evaluate whether the model asks for information that is answerable under the hidden intent and useful for downstream deep search,
+          avoiding a single canonical clarification target.
+        </p>
+      </div>
+    </div>
+
+    <div class="section" id="evaluation">
+      <div class="sectionTitle">
+        <h2>Static Golden Nuggets & Evaluation</h2>
+        <span class="badge">LLM-judge coverage</span>
+      </div>
+
+      <div class="card">
+        <p>
+          We provide a static golden reference per intent query (JSONL). Each gold record contains weighted nuggets and traceability fields.
+          At evaluation time, a candidate answer is scored by weighted nugget recall with partial credit:
+          <span class="ok">full=1</span>, <span class="warn">partial=0.5</span>, none=0.
+        </p>
+
+        <div class="code">
+          <pre><code>restore_score_100 = 100 * ( sum_j w_j * s(cov_j) ) / ( sum_j w_j )
+s(full)=1, s(partial)=0.5, s(none)=0</code></pre>
+        </div>
+
+        <p class="small" style="margin-top:10px;">
+          Only <code>gold.nuggets</code> are required by <code>eval_gold.py</code> for scoring; other fields are included for debugging and analysis.
+        </p>
+      </div>
+    </div>
+
+    <div class="section" id="results">
+      <div class="sectionTitle">
+        <h2>Baseline Results (from our paper)</h2>
+        <span class="badge">Fill / update if needed</span>
+      </div>
+
+      <div class="card">
+        <p class="muted">
+          Below is a compact summary table for <code>restore_score_100</code>.
+          (You can edit these numbers later without changing the evaluation code.)
+        </p>
+
+        <div style="margin-top:12px; overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>System</th>
+                <th>k</th>
+                <th>mean</th>
+                <th>p50</th>
+                <th>p90</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="hi">orig</td><td>–</td><td class="hi">19.434</td><td>20.454</td><td>35.294</td></tr>
+
+              <tr><td>Qwen</td><td>1</td><td>22.527</td><td>19.565</td><td>47.211</td></tr>
+              <tr><td>EB</td><td>1</td><td>23.460</td><td>20.000</td><td>50.000</td></tr>
+              <tr><td>DeepSeek</td><td>1</td><td>23.234</td><td>21.053</td><td>48.416</td></tr>
+              <tr><td>Kimi</td><td>1</td><td>22.687</td><td>20.000</td><td>46.236</td></tr>
+              <tr><td class="hi">GPT</td><td>1</td><td class="hi">26.474</td><td class="hi">25.000</td><td>50.000</td></tr>
+              <tr><td>Claude</td><td>1</td><td>25.911</td><td>23.333</td><td class="hi">52.996</td></tr>
+              <tr><td>Gemini</td><td>1</td><td>25.874</td><td>21.429</td><td class="hi">52.996</td></tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="license">
+      <div class="sectionTitle">
+        <h2>License</h2>
+        <span class="badge">MIT + CC BY 4.0</span>
+      </div>
+      <div class="card">
+        <p><b>Code:</b> MIT License (see <code>LICENSE</code>)</p>
+        <p><b>Data:</b> CC BY 4.0 (see <code>DATA_LICENSE</code>)</p>
+        <p class="small" style="margin-top:10px;">
+          This release includes model-generated outputs and automatically judged scores. Provided answers may contain errors.
+        </p>
+      </div>
+    </div>
+
+    <div class="foot">
+      <div>© Clarify-then-Search · Hard518 release</div>
+      <div class="muted">Built with plain HTML/CSS for GitHub Pages</div>
+    </div>
+  </div>
+
+  <script>
+    function copyBlock(btn){
+      const pre = btn.closest(".code").querySelector("pre");
+      const text = pre.innerText;
+      navigator.clipboard.writeText(text).then(()=>{
+        const old = btn.textContent;
+        btn.textContent = "Copied!";
+        setTimeout(()=>btn.textContent = old, 900);
+      });
+    }
+  </script>
 </body>
 </html>
