@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Clarify-then-Search</title>
+  <title>Clarify-Then-Search</title>
   <style>
     :root{
       --bg:#0b1020;
@@ -17,8 +17,11 @@
       --accent2:#7c5cff;
       --good:#5eead4;
       --warn:#fbbf24;
+      --hot:#ff5b5b;
     }
+
     *{box-sizing:border-box}
+
     body{
       margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans";
@@ -30,74 +33,233 @@
         var(--bg);
       line-height:1.6;
     }
+
     a{color:inherit}
-    .wrap{max-width:1100px;margin:0 auto;padding:36px 18px 64px}
+    .wrap{max-width:1120px;margin:0 auto;padding:32px 18px 64px}
+
     .topbar{
-      display:flex;justify-content:space-between;align-items:center;gap:14px;
-      padding:10px 12px;border:1px solid var(--border);border-radius:16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      border-radius:16px;
       background:rgba(255,255,255,.04);
       backdrop-filter: blur(10px);
     }
-    .brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px}
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:700;
+      letter-spacing:.2px;
+      white-space:nowrap;
+    }
+
     .dot{
-      width:12px;height:12px;border-radius:50%;
+      width:12px;
+      height:12px;
+      border-radius:50%;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
       box-shadow: 0 0 0 4px rgba(77,163,255,.15);
     }
+
     .nav{display:flex;flex-wrap:wrap;gap:8px}
+
     .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 10px;border-radius:999px;border:1px solid var(--border);
-      background:rgba(255,255,255,.04); text-decoration:none;
-      font-size:13px;color:var(--muted)
-    }
-    .pill:hover{background:rgba(255,255,255,.07);color:var(--text)}
-    .hero{
-      margin-top:22px;
-      padding:28px 22px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
       border:1px solid var(--border);
-      border-radius:22px;
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      background:rgba(255,255,255,.04);
+      text-decoration:none;
+      font-size:13px;
+      color:var(--muted)
+    }
+
+    .pill:hover{background:rgba(255,255,255,.07);color:var(--text)}
+
+    .paperHero{
+      margin-top:22px;
+      padding:34px 26px 30px;
+      border:1px solid var(--border);
+      border-radius:24px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.035));
       box-shadow: var(--shadow);
       overflow:hidden;
       position:relative;
+      text-align:center;
     }
-    .hero:before{
+
+    .paperHero:before{
       content:"";
-      position:absolute; inset:-2px;
-      background: radial-gradient(600px 220px at 20% 0%, rgba(77,163,255,.22), transparent 60%),
-                  radial-gradient(550px 200px at 85% 10%, rgba(124,92,255,.20), transparent 55%);
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(650px 250px at 20% 0%, rgba(77,163,255,.22), transparent 60%),
+        radial-gradient(600px 220px at 85% 10%, rgba(124,92,255,.20), transparent 55%),
+        radial-gradient(520px 220px at 50% 100%, rgba(94,234,212,.10), transparent 65%);
       pointer-events:none;
       filter:saturate(120%);
     }
-    .hero > *{position:relative}
-    h1{margin:0 0 8px;font-size:36px;line-height:1.15}
-    .subtitle{margin:0;color:var(--muted);max-width:900px}
-    .ctaRow{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+
+    .paperHero > *{position:relative}
+
+    h1.title{
+      margin:0 auto 16px;
+      max-width:1050px;
+      font-size:clamp(30px, 4.2vw, 48px);
+      line-height:1.12;
+      letter-spacing:-1.5px;
+      font-weight:850;
+      color:#f3f6ff;
+      text-wrap:balance;
+    }
+
+    .authors{
+      max-width:980px;
+      margin:0 auto 6px;
+      color:#8fc7ff;
+      font-size:clamp(17px, 2.0vw, 23px);
+      line-height:1.5;
+      font-weight:600;
+    }
+
+    .authors sup,
+    .affiliations sup{
+      color:var(--muted);
+      font-weight:700;
+      margin-left:1px;
+    }
+
+    .affiliations{
+      max-width:980px;
+      margin:0 auto;
+      color:rgba(232,236,255,.78);
+      font-size:clamp(14px, 1.5vw, 18px);
+      line-height:1.5;
+    }
+
+    .venueBadge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      margin:18px auto 0;
+      padding:9px 14px;
+      border-radius:999px;
+      border:1px solid rgba(94,234,212,.35);
+      background:rgba(94,234,212,.10);
+      color:#c7fff5;
+      font-size:14px;
+      font-weight:800;
+      box-shadow:0 14px 38px rgba(94,234,212,.10);
+    }
+
+    .news{
+      max-width:980px;
+      margin:18px auto 0;
+      padding:14px 16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(0,0,0,.18);
+      color:rgba(232,236,255,.86);
+      font-size:clamp(15px, 1.6vw, 18px);
+      line-height:1.55;
+    }
+
+    .news b{color:#ffffff}
+    .news .hot{color:var(--hot);font-weight:850}
+    .news .ok{color:var(--good);font-weight:850}
+
+    .ctaRow{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:10px;
+      margin-top:18px;
+    }
+
     .btn{
-      display:inline-flex;align-items:center;gap:10px;
-      padding:11px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.18);
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:11px 15px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.18);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-weight:800;
+      text-decoration:none;
+      box-shadow:none;
+      transition:transform .15s ease, background .15s ease, filter .15s ease;
+    }
+
+    .btn:hover{
+      transform:translateY(-1px);
+      background:rgba(255,255,255,.10);
+      filter:brightness(1.03);
+    }
+
+    .btn.primary{
       background: linear-gradient(135deg, rgba(77,163,255,.95), rgba(124,92,255,.95));
-      color:#081028; font-weight:800; text-decoration:none;
+      color:#081028;
       box-shadow: 0 14px 36px rgba(77,163,255,.22);
     }
-    .btn:hover{filter:brightness(1.03)}
-    .btn.secondary{
-      background: rgba(255,255,255,.05);
-      color:var(--text);
-      font-weight:700;
-      box-shadow:none;
+
+    .kvs{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:10px;
+      margin-top:18px;
+      text-align:left;
     }
+
+    @media (max-width: 900px){
+      .topbar{align-items:flex-start;flex-direction:column}
+      .kvs{grid-template-columns:1fr 1fr}
+      .paperHero{padding:28px 18px}
+    }
+
+    @media (max-width: 560px){
+      .kvs{grid-template-columns:1fr}
+      h1.title{letter-spacing:-.8px}
+    }
+
+    .kv{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:14px;
+      padding:12px;
+      background: rgba(0,0,0,.14);
+    }
+
+    .kv .k{
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:4px;
+    }
+
+    .kv .v{
+      font-weight:850;
+      color:#f2f5ff;
+    }
+
     .grid{
       display:grid;
       grid-template-columns: 1.2fr .8fr;
       gap:16px;
       margin-top:16px;
     }
+
     @media (max-width: 900px){
       .grid{grid-template-columns:1fr}
-      h1{font-size:30px}
     }
+
     .card{
       border:1px solid var(--border);
       border-radius:18px;
@@ -105,30 +267,43 @@
       padding:16px 16px;
       backdrop-filter: blur(8px);
     }
-    .card h2{margin:0 0 8px;font-size:18px}
-    .card p{margin:0;color:var(--muted)}
-    .kvs{display:grid;grid-template-columns: 1fr 1fr; gap:10px; margin-top:12px}
-    @media (max-width: 520px){ .kvs{grid-template-columns:1fr} }
-    .kv{
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:14px;
-      padding:12px;
-      background: rgba(0,0,0,.10);
+
+    .card h2{
+      margin:0 0 8px;
+      font-size:18px;
     }
-    .kv .k{font-size:12px;color:var(--muted);margin-bottom:4px}
-    .kv .v{font-weight:800}
-    .section{margin-top:22px}
+
+    .card p{
+      margin:0;
+      color:var(--muted);
+    }
+
+    .section{
+      margin-top:22px;
+    }
+
     .sectionTitle{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
       margin:0 0 10px;
     }
-    .sectionTitle h2{margin:0;font-size:20px}
+
+    .sectionTitle h2{
+      margin:0;
+      font-size:20px;
+    }
+
     .badge{
-      font-size:12px;color:var(--muted);
+      font-size:12px;
+      color:var(--muted);
       border:1px solid rgba(255,255,255,.14);
-      padding:6px 10px;border-radius:999px;
+      padding:6px 10px;
+      border-radius:999px;
       background: rgba(255,255,255,.04);
     }
+
     .code{
       margin-top:10px;
       border:1px solid rgba(255,255,255,.14);
@@ -136,22 +311,42 @@
       background: rgba(0,0,0,.22);
       overflow:hidden;
     }
-    pre{margin:0;padding:12px 12px;overflow:auto;color:rgba(232,236,255,.92)}
-    code{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New"; font-size:13px}
-    .actions{
-      display:flex;gap:10px;flex-wrap:wrap;align-items:center;
-      padding:10px 12px;border-top:1px solid rgba(255,255,255,.10);
-      color:var(--muted);font-size:12px
+
+    pre{
+      margin:0;
+      padding:12px 12px;
+      overflow:auto;
+      color:rgba(232,236,255,.92);
     }
+
+    code{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New";
+      font-size:13px;
+    }
+
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      padding:10px 12px;
+      border-top:1px solid rgba(255,255,255,.10);
+      color:var(--muted);
+      font-size:12px
+    }
+
     .miniBtn{
       border:1px solid rgba(255,255,255,.18);
       background: rgba(255,255,255,.05);
       color:var(--text);
-      padding:8px 10px;border-radius:12px;
+      padding:8px 10px;
+      border-radius:12px;
       cursor:pointer;
       font-weight:700;
     }
+
     .miniBtn:hover{background: rgba(255,255,255,.08)}
+
     table{
       width:100%;
       border-collapse:separate;
@@ -161,6 +356,7 @@
       border-radius:16px;
       background: rgba(0,0,0,.16);
     }
+
     th, td{
       padding:10px 10px;
       border-bottom:1px solid rgba(255,255,255,.10);
@@ -168,24 +364,42 @@
       font-size:13px;
       text-align:left;
     }
-    th{color:rgba(232,236,255,.92);font-weight:800;background: rgba(255,255,255,.04)}
+
+    th{
+      color:rgba(232,236,255,.92);
+      font-weight:800;
+      background: rgba(255,255,255,.04);
+    }
+
     tr:last-child td{border-bottom:none}
+
     .hi{color:var(--text);font-weight:800}
+
     .tag{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:6px 10px;border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
       background: rgba(255,255,255,.04);
-      font-size:12px;color:var(--muted);
-      margin-right:8px;margin-top:8px
+      font-size:12px;
+      color:var(--muted);
+      margin-right:8px;
+      margin-top:8px
     }
+
     .foot{
       margin-top:26px;
       color:var(--muted);
       font-size:12px;
-      display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+      display:flex;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      gap:10px;
       opacity:.95
     }
+
     .muted{color:var(--muted)}
     .ok{color:var(--good);font-weight:800}
     .warn{color:var(--warn);font-weight:800}
@@ -196,30 +410,67 @@
 <body>
   <div class="wrap">
     <div class="topbar">
-      <div class="brand"><span class="dot"></span> Clarify-then-Search</div>
+      <div class="brand"><span class="dot"></span> Clarify-Then-Search</div>
       <div class="nav">
-        <a class="pill" href="#download">Download</a>
+        <a class="pill" href="#download">Home</a>
         <a class="pill" href="#quickstart">Quickstart</a>
         <a class="pill" href="#dataset">Dataset</a>
         <a class="pill" href="#results">Results</a>
         <a class="pill" href="#evaluation">Evaluation</a>
+        <a class="pill" href="#citation">Citation</a>
         <a class="pill" href="#license">License</a>
       </div>
     </div>
 
-    <div class="hero" id="download">
-      <h1>Clarify-then-Search for Chinese Deep Search</h1>
-      <p class="subtitle">
-        A benchmark for underspecified information-seeking queries where clarification must provide end-to-end utility.
-        This page hosts the <b>Hard518</b> public release and evaluation scripts.
-      </p>
+    <header class="paperHero" id="download">
+      <h1 class="title">
+        Clarify-Then-Search: A Clarification Benchmark for Deep Search with End-to-End Nugget Restoration
+      </h1>
+
+      <div class="authors">
+        Deqiang Huang<sup>1</sup>, Jingbo Zhou<sup>2</sup>, Xinjiang Lu<sup>2</sup>,
+        Tong Xu<sup>1</sup>, Hua Wu<sup>2</sup>, Enhong Chen<sup>1</sup>
+      </div>
+
+      <div class="affiliations">
+        <sup>1</sup>University of Science and Technology of China
+        &nbsp;&nbsp;
+        <sup>2</sup>Baidu Inc.
+      </div>
+
+      <div class="venueBadge">
+        🎉 Accepted to KDD 2026 Datasets &amp; Benchmarks Track
+      </div>
+
+      <div class="news">
+        <b>2026-05-17:</b>
+        <span class="ok">Paper accepted!</span>
+        Clarify-Then-Search introduces a
+        <span class="hot">closed-book, leakage-resistant protocol</span>
+        and an
+        <span class="hot">end-to-end nugget restoration metric</span>
+        for evaluating clarification in deep search. The <b>Hard518</b> dataset,
+        prompts, scripts, and evaluation artifacts are publicly released below.
+      </div>
 
       <div class="ctaRow">
-        <a class="btn" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/download/hard518-v1/clarify-then-search-518-release.zip">
-          ⬇ Download Hard518 (zip)
+        <a class="btn primary" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/download/hard518-v1/clarify-then-search-518-release.zip">
+          ⬇ Data
         </a>
-        <a class="btn secondary" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/tag/hard518-v1">
-          View GitHub Release
+        <a class="btn" href="#paper">
+          📄 Paper
+        </a>
+        <a class="btn" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/tag/hard518-v1">
+          💻 Code
+        </a>
+        <a class="btn" href="#dataset">
+          🧭 Dataset
+        </a>
+        <a class="btn" href="#evaluation">
+          📊 Evaluation
+        </a>
+        <a class="btn" href="#citation">
+          ✒ Citation
         </a>
       </div>
 
@@ -234,18 +485,18 @@
         </div>
         <div class="kv">
           <div class="k">Gold format</div>
-          <div class="v">weighted nuggets (JSONL)</div>
+          <div class="v">weighted nuggets</div>
         </div>
         <div class="kv">
           <div class="k">Licenses</div>
-          <div class="v">Code: MIT · Data: CC BY 4.0</div>
+          <div class="v">MIT · CC BY 4.0</div>
         </div>
       </div>
 
       <div class="small" style="margin-top:12px;">
-        Tip: GitHub Pages may take a few minutes to reflect commits due to build & CDN cache.
+        Tip: GitHub Pages may take a few minutes to reflect commits due to build and CDN cache.
       </div>
-    </div>
+    </header>
 
     <div class="grid" id="quickstart">
       <div class="card">
@@ -305,6 +556,30 @@ python ./code/eval_gold.py \
       </div>
     </div>
 
+    <div class="section" id="paper">
+      <div class="sectionTitle">
+        <h2>Paper</h2>
+        <span class="badge">KDD 2026 D&amp;B Track</span>
+      </div>
+      <div class="card">
+        <p>
+          <b>Clarify-Then-Search: A Clarification Benchmark for Deep Search with End-to-End Nugget Restoration</b>
+          evaluates whether LLM clarification improves downstream deep search under a closed-book protocol.
+        </p>
+        <div class="ctaRow" style="justify-content:flex-start;">
+          <a class="btn" href="#">
+            📄 Paper link coming soon
+          </a>
+          <a class="btn" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/tag/hard518-v1">
+            💻 GitHub Release
+          </a>
+        </div>
+        <p class="small" style="margin-top:10px;">
+          Replace the paper button with the ACM Digital Library, OpenReview, or arXiv link when available.
+        </p>
+      </div>
+    </div>
+
     <div class="section" id="dataset">
       <div class="sectionTitle">
         <h2>Dataset</h2>
@@ -320,7 +595,7 @@ python ./code/eval_gold.py \
           rewrites to <code>q̂</code>, and is evaluated by running a fixed deep-search backend on <code>q̂</code> and scoring nugget restoration against a static gold built from <code>fused_query</code>.
         </p>
 
-        <div class="kvs">
+        <div class="kvs" style="grid-template-columns:1fr 1fr;">
           <div class="kv">
             <div class="k">Released fields</div>
             <div class="v">fused_query, blurred_query</div>
@@ -341,7 +616,7 @@ python ./code/eval_gold.py \
 
     <div class="section" id="evaluation">
       <div class="sectionTitle">
-        <h2>Static Golden Nuggets & Evaluation</h2>
+        <h2>Static Golden Nuggets &amp; Evaluation</h2>
         <span class="badge">LLM-judge coverage</span>
       </div>
 
@@ -365,14 +640,13 @@ s(full)=1, s(partial)=0.5, s(none)=0</code></pre>
 
     <div class="section" id="results">
       <div class="sectionTitle">
-        <h2>Baseline Results (from our paper)</h2>
-        <span class="badge">Fill / update if needed</span>
+        <h2>Baseline Results</h2>
+        <span class="badge">restore_score_100</span>
       </div>
 
       <div class="card">
         <p class="muted">
-          Below is a compact summary table for <code>restore_score_100</code>.
-          (You can edit these numbers later without changing the evaluation code.)
+          Below is a compact summary table for one-turn clarification results reported in the paper.
         </p>
 
         <div style="margin-top:12px; overflow:auto;">
@@ -388,7 +662,6 @@ s(full)=1, s(partial)=0.5, s(none)=0</code></pre>
             </thead>
             <tbody>
               <tr><td class="hi">orig</td><td>–</td><td class="hi">19.434</td><td>20.454</td><td>35.294</td></tr>
-
               <tr><td>Qwen3-235B-A22B-Instruct</td><td>1</td><td>22.527</td><td>19.565</td><td>47.211</td></tr>
               <tr><td>ERNIE-4.5-Turbo-128K</td><td>1</td><td>23.460</td><td>20.000</td><td>50.000</td></tr>
               <tr><td>DeepSeek-3.2</td><td>1</td><td>23.234</td><td>21.053</td><td>48.416</td></tr>
@@ -396,9 +669,32 @@ s(full)=1, s(partial)=0.5, s(none)=0</code></pre>
               <tr><td class="hi">GPT-5.2</td><td>1</td><td class="hi">26.474</td><td class="hi">25.000</td><td>50.000</td></tr>
               <tr><td>Claude-Sonnet-4.5</td><td>1</td><td>25.911</td><td>23.333</td><td class="hi">52.996</td></tr>
               <tr><td>Gemini-2.5-Pro</td><td>1</td><td>25.874</td><td>21.429</td><td class="hi">52.996</td></tr>
-
             </tbody>
           </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section" id="citation">
+      <div class="sectionTitle">
+        <h2>Citation</h2>
+        <span class="badge">BibTeX</span>
+      </div>
+      <div class="card">
+        <p class="muted">
+          Please cite our paper if you use the benchmark, code, or evaluation artifacts.
+        </p>
+        <div class="code">
+          <pre><code>@inproceedings{huang2026clarifythensearch,
+  title     = {Clarify-Then-Search: A Clarification Benchmark for Deep Search with End-to-End Nugget Restoration},
+  author    = {Huang, Deqiang and Zhou, Jingbo and Lu, Xinjiang and Xu, Tong and Wu, Hua and Chen, Enhong},
+  booktitle = {Proceedings of the 32nd ACM SIGKDD Conference on Knowledge Discovery and Data Mining},
+  year      = {2026}
+}</code></pre>
+          <div class="actions">
+            <button class="miniBtn" onclick="copyBlock(this)">Copy BibTeX</button>
+            <span>Update DOI / pages after ACM DL metadata is finalized.</span>
+          </div>
         </div>
       </div>
     </div>
@@ -418,7 +714,7 @@ s(full)=1, s(partial)=0.5, s(none)=0</code></pre>
     </div>
 
     <div class="foot">
-      <div>© Clarify-then-Search · Hard518 release</div>
+      <div>© Clarify-Then-Search · Hard518 release</div>
       <div class="muted">Built with plain HTML/CSS for GitHub Pages</div>
     </div>
   </div>
