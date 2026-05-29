@@ -1,3 +1,4 @@
+```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -304,6 +305,33 @@
       background: rgba(255,255,255,.04);
     }
 
+    .figureCard{
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:rgba(255,255,255,.045);
+      padding:16px;
+      backdrop-filter: blur(8px);
+    }
+
+    .frameworkImg{
+      width:100%;
+      max-width:1050px;
+      display:block;
+      margin:0 auto;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.92);
+      box-shadow:0 18px 50px rgba(0,0,0,.30);
+    }
+
+    .figCaption{
+      margin-top:12px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+      text-align:center;
+    }
+
     .code{
       margin-top:10px;
       border:1px solid rgba(255,255,255,.14);
@@ -413,6 +441,7 @@
       <div class="brand"><span class="dot"></span> Clarify-Then-Search</div>
       <div class="nav">
         <a class="pill" href="#download">Home</a>
+        <a class="pill" href="#framework">Framework</a>
         <a class="pill" href="#quickstart">Quickstart</a>
         <a class="pill" href="#dataset">Dataset</a>
         <a class="pill" href="#results">Results</a>
@@ -463,6 +492,9 @@
         <a class="btn" href="https://github.com/Clarify-then-Search/clarify-then-search.github.io/releases/tag/hard518-v1">
           💻 Code
         </a>
+        <a class="btn" href="#framework">
+          🧩 Framework
+        </a>
         <a class="btn" href="#dataset">
           🧭 Dataset
         </a>
@@ -497,6 +529,30 @@
         Tip: GitHub Pages may take a few minutes to reflect commits due to build and CDN cache.
       </div>
     </header>
+
+    <section class="section" id="framework">
+      <div class="sectionTitle">
+        <h2>Framework Overview</h2>
+        <span class="badge">Closed-book clarify-then-search pipeline</span>
+      </div>
+
+      <div class="figureCard">
+        <img
+          class="frameworkImg"
+          src="assets/pipeline.png"
+          alt="Clarify-Then-Search framework overview"
+        />
+
+        <div class="figCaption">
+          <b>Clarify-Then-Search</b> evaluates clarification under a leakage-resistant closed-book protocol.
+          Each benchmark instance contains a clear intent query and a blurred underspecified query. The Clarifier only sees the blurred query
+          and asks clarification questions; the User Answerer answers strictly from the hidden intent; and the Rewriter uses only the
+          observed Q&amp;A pairs to construct a retrieval-ready query. This design prevents the Rewriter from directly accessing oracle intent
+          while preserving an end-to-end deep-search evaluation. We run WebDancer on the rewritten query and measure utility by how well
+          the final answer restores static, evidence-grounded golden nuggets.
+        </div>
+      </div>
+    </section>
 
     <div class="grid" id="quickstart">
       <div class="card">
@@ -732,3 +788,4 @@ s(full)=1, s(partial)=0.5, s(none)=0</code></pre>
   </script>
 </body>
 </html>
+```
