@@ -698,12 +698,14 @@ s(full)=1, s(partial)=0.5, s(none)=0</code></pre>
         <h2>Baseline Results</h2>
         <span class="badge">restore_score_100</span>
       </div>
-
+    
       <div class="card">
         <p class="muted">
-          Below is a compact summary table for one-turn clarification results reported in the paper.
+          Below are compact summary tables for one-turn and three-turn clarification results reported in the paper.
+          At <b>k=1</b>, GPT achieves the strongest one-turn result; at <b>k=3</b>, ERNIE-4.5-Turbo-128K achieves the best overall performance.
         </p>
-
+    
+        <h3 style="margin:16px 0 8px; font-size:16px;">One-turn clarification results (k=1)</h3>
         <div style="margin-top:12px; overflow:auto;">
           <table>
             <thead>
@@ -727,6 +729,36 @@ s(full)=1, s(partial)=0.5, s(none)=0</code></pre>
             </tbody>
           </table>
         </div>
+    
+        <h3 style="margin:22px 0 8px; font-size:16px;">Three-turn clarification results (k=3)</h3>
+        <div style="margin-top:12px; overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>System</th>
+                <th>k</th>
+                <th>mean</th>
+                <th>p50</th>
+                <th>p90</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="hi">orig</td><td>–</td><td class="hi">19.434</td><td>20.454</td><td>35.294</td></tr>
+              <tr><td>Qwen3-235B-A22B-Instruct</td><td>3</td><td>26.235</td><td>22.997</td><td>51.744</td></tr>
+              <tr><td class="hi">ERNIE-4.5-Turbo-128K</td><td>3</td><td class="hi">28.339</td><td class="hi">26.087</td><td class="hi">57.143</td></tr>
+              <tr><td>DeepSeek-3.2</td><td>3</td><td>26.486</td><td>25.000</td><td>52.424</td></tr>
+              <tr><td>Kimi-K2-Instruct</td><td>3</td><td>26.568</td><td>23.509</td><td>56.310</td></tr>
+              <tr><td>GPT-5.2</td><td>3</td><td>26.297</td><td>23.385</td><td>54.407</td></tr>
+              <tr><td>Claude-Sonnet-4.5</td><td>3</td><td>27.029</td><td>25.000</td><td>53.329</td></tr>
+              <tr><td>Gemini-2.5-Pro</td><td>3</td><td>27.126</td><td>24.194</td><td>52.628</td></tr>
+            </tbody>
+          </table>
+        </div>
+    
+        <p class="small" style="margin-top:12px;">
+          The three-turn setting highlights that larger clarification budgets reward sustained question-selection quality:
+          ERNIE-4.5-Turbo-128K obtains the highest mean, median, and p90 scores at k=3.
+        </p>
       </div>
     </div>
 
