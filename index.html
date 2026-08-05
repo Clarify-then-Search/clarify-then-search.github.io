@@ -496,12 +496,20 @@
 
     .pdfFrame{
       width:100%;
-      aspect-ratio:4 / 3;
       border-radius:16px;
       overflow:hidden;
       border:1px solid rgba(255,255,255,.14);
       background:#fff;
       box-shadow:0 18px 50px rgba(0,0,0,.30);
+    }
+
+    /* Match each vector PDF's native page ratio to avoid empty space. */
+    .pdfFrame.frameworkPdf{
+      aspect-ratio:1318.5 / 366;
+    }
+
+    .pdfFrame.datasetPdf{
+      aspect-ratio:1363.5 / 624;
     }
 
     .pdfObject{
@@ -638,7 +646,6 @@
     @media (max-width:560px){
       .insightGrid,
       .diagnosticGrid{grid-template-columns:1fr}
-      .pdfFrame{aspect-ratio:1 / 1.05}
     }
 
   </style>
@@ -785,7 +792,7 @@
       </div>
 
       <div class="figureCard">
-        <div class="pdfFrame">
+        <div class="pdfFrame frameworkPdf">
           <object
             class="pdfObject"
             data="assets/pipeline_phase2.pdf#toolbar=0&amp;navpanes=0&amp;scrollbar=0&amp;view=FitH"
@@ -928,7 +935,7 @@ python ./code/eval_gold.py \
       </div>
 
       <div class="figureCard" style="margin-top:16px;">
-        <div class="pdfFrame">
+        <div class="pdfFrame datasetPdf">
           <object
             class="pdfObject"
             data="assets/data_generation_pipeline.pdf#toolbar=0&amp;navpanes=0&amp;scrollbar=0&amp;view=FitH"
